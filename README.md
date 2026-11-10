@@ -41,8 +41,17 @@ npm run build    # 生产构建
 ## 图片资源
 
 - `resources/assets-original/`：原图（1408×768 PNG，每张 1MB 左右），**不会**被打包上线。
-- `public/assets/`：线上实际使用的 WebP，尺寸为页面显示尺寸的 3 倍，8 张合计约 27KB。
+- `public/assets/`：线上实际使用的 WebP，尺寸为页面显示尺寸的 **2 倍**，8 张合计约 15KB。
 - 换图流程：替换 `resources/assets-original/` 里的原图 → 执行 `npm run optimize:images`（需要本机安装 ImageMagick）。
+- 首屏（首页）只有 `banner-gift.webp` 一张图，且已在 `index.html` 里 `preload`；车型列表、个人中心空状态等屏外图片用 `loading="lazy"` 延迟加载。
+
+## 性能
+
+- 路由级代码分割：入口只同步打包首页，其余 8 个页面按需分包加载（`React.lazy`）；`node_modules`（react / react-dom / react-router）单独拆成 `vendor` chunk，便于浏览器长期缓存。
+- 首屏渲染完成后，利用浏览器空闲时间（`requestIdleCallback`）预取其余路由的 chunk，导航时几乎是瞬时切换。
+- 图标均为手绘 SVG，随各页面 chunk 按需引入（tree-shaken），没有整包图标库。
+- 图片均为定宽定高的 WebP + 写明 `width`/`height`，避免加载时布局抖动（CLS）。
+- 常见首屏体积：约 71 KB gzip（其中 vendor ≈ 53 KB），另有一个 3.5 KB 的首屏图片。
 
 ## 说明
 

@@ -433,8 +433,8 @@ function Price({ prefix, int, dec, discount, discountOrange }) {
 function SimpleRow({ r, checked, onToggle }) {
   return (
     <div className="bg-white rounded-[13px] pl-[6px] pr-[8px] py-[8px] flex items-center gap-[5px] shadow-[0_3px_14px_rgba(30,40,60,0.05)]">
-      {/* 缩略图是 186×101 的 WebP（每张约 2KB）；写明宽高，图片没到之前也先占好位置 */}
-      <img src={r.img} alt="" width="186" height="101" decoding="async" className="w-[62px] h-[42px] object-contain shrink-0" />
+      {/* 缩略图是 124×68 的 WebP（每张约 1.3KB）；写明宽高，图片没到之前也先占好位置；列表长，屏外的行用 lazy 延迟加载 */}
+      <img src={r.img} alt="" width="124" height="68" loading="lazy" decoding="async" className="w-[62px] h-[42px] object-contain shrink-0" />
       <div className="flex-1 min-w-0">
         <div className="text-[13.5px] font-bold text-[#1c2338] leading-none whitespace-nowrap truncate">{r.title}</div>
         {r.tags ? (

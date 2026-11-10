@@ -96,7 +96,7 @@ export default function Arriving() {
 
             {/* chat */}
             <div className="absolute left-[12px] top-[380px] flex items-center gap-[8px]">
-              <img src="assets/driver-avatar.webp" alt="" width="126" height="126" decoding="async" className="w-[38px] h-[38px] shrink-0 rounded-full object-cover border-[2px] border-white shadow-[0_2px_8px_rgba(30,40,60,0.2)]" />
+              <img src="assets/driver-avatar.webp" alt="" width="84" height="84" decoding="async" className="w-[38px] h-[38px] shrink-0 rounded-full object-cover border-[2px] border-white shadow-[0_2px_8px_rgba(30,40,60,0.2)]" />
               <div className="rounded-[10px] px-[14px] py-[10px] text-white text-[14px] leading-none" style={{ background: 'rgba(62,72,84,0.72)' }}>
                 你好，很高兴为你服务
               </div>
@@ -185,12 +185,12 @@ export default function Arriving() {
             </div>
             <div className="flex flex-col items-end">
               <div className="relative">
-                <img src="assets/car-blue-suv.webp" alt="" width="384" height="209" decoding="async" className="w-[128px] h-[70px] object-contain" />
+                <img src="assets/car-blue-suv.webp" alt="" width="256" height="140" decoding="async" className="w-[128px] h-[70px] object-contain" />
                 <img
                   src="assets/driver-avatar.webp"
                   alt=""
-                  width="126"
-                  height="126"
+                  width="84"
+                  height="84"
                   decoding="async"
                   className="absolute right-[-2px] bottom-[2px] w-[42px] h-[42px] rounded-full object-cover border-[2px] border-white"
                 />

@@ -21,6 +21,17 @@ export default defineConfig({
       ],
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        // node_modules（react/react-dom/react-router）单独拆成 vendor chunk：
+        // 与业务代码各自 hash、互不拖累，浏览器可以长期缓存框架代码
+        manualChunks(id) {
+          if (id.includes('node_modules')) return 'vendor'
+        },
+      },
+    },
+  },
   server: {
     host: '0.0.0.0',
     port: 5173,
