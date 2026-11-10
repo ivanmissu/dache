@@ -25,12 +25,28 @@
 
 ```bash
 npm install
-npm run dev      # 本地开发（移动端 H5 全屏，桌面浏览器中显示手机壳预览）
+npm run dev      # 本地开发（手机上是全屏 H5；桌面浏览器里显示成一台手机的大小，方便预览）
 npm run build    # 生产构建
 ```
+
+## 整体缩放比例
+
+界面按 iPhone 的比例整体缩小到设计稿的 **90%**（文字、图标、按钮、间距一起等比缩放，各机型上元素大小一致）。
+
+- 调整比例只需要改一处：`src/index.css` 里的 `html { font-size: 90%; }`（`100%` = 设计稿原始大小）。
+- 原理：样式里的 `px` 都按设计稿书写，构建时由 `postcss-pxtorem`（见 `vite.config.js`）统一转成 `rem`。
+- 行内 `style` 和 SVG 的 `width / height` 不经过 PostCSS，需要用 `src/lib/rem.js` 的 `rem()` 手动转换，否则不会跟着缩放。
+- 输入框字号缩放后不能小于 16px，否则 iOS 聚焦时会自动放大页面。
+
+## 图片资源
+
+- `resources/assets-original/`：原图（1408×768 PNG，每张 1MB 左右），**不会**被打包上线。
+- `public/assets/`：线上实际使用的 WebP，尺寸为页面显示尺寸的 3 倍，8 张合计约 27KB。
+- 换图流程：替换 `resources/assets-original/` 里的原图 → 执行 `npm run optimize:images`（需要本机安装 ImageMagick）。
 
 ## 说明
 
 - 地图为 SVG 手绘仿地图（无需地图 SDK / API Key），包含路网、绿地、POI 标注、车辆与路线覆盖层。
-- 图标均为手绘 SVG；横幅礼盒、车型图片、司机头像、空状态插画为生成的静态素材（`public/assets/`）。
-- iOS 状态栏（9:41）与 Home Indicator 为原型还原的一部分。
+- 图标均为手绘 SVG；横幅礼盒、车型图片、司机头像、空状态插画为生成的静态素材。
+- 字体只用系统字体（iPhone 上为苹方），不加载网页字体。
+- 页面作为 H5 直接在浏览器 / 微信里打开，不再绘制 iOS 状态栏和底部 Home 横条；在全屏 WebView 里会自动按安全区（`env(safe-area-inset-*)`）留白。

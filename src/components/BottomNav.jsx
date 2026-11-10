@@ -11,7 +11,7 @@ export default function BottomNav() {
   const { pathname } = useLocation()
   const nav = useNavigate()
   return (
-    <div className="shrink-0 bg-white border-t border-[#F0F1F4] pt-[8px] pb-[22px] flex">
+    <div className="shrink-0 bg-white border-t border-[#F0F1F4] pt-[8px] pb-[calc(7px+var(--sab))] flex">
       {TABS.map(({ key, label, Icon }) => {
         const active = pathname === key
         return (

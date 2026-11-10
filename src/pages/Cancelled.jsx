@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import FakeMap from '../components/FakeMap.jsx'
+import MapArea from '../components/MapArea.jsx'
 import { LogoCar, Crosshair, ShieldPlus, Clock, PinSolid } from '../components/Icons.jsx'
 
 const CANCEL_LABELS = [
@@ -19,10 +20,11 @@ const CANCEL_LABELS = [
 export default function Cancelled() {
   const nav = useNavigate()
   return (
-    <div className="flex flex-col h-full bg-[#F5F6F8]">
+    // 页面底色用白色，和底部面板连成一片（屏幕比内容高时不露出灰底）
+    <div className="flex flex-col h-full bg-white">
       <div className="page-scroll">
         {/* ---------------- map ---------------- */}
-        <div className="relative h-[510px] shrink-0">
+        <MapArea height={510}>
           <FakeMap theme="green" labels={CANCEL_LABELS} dense>
             {/* railway */}
             <svg className="absolute inset-0 w-full h-full" viewBox="0 0 393 560" fill="none">
@@ -74,10 +76,10 @@ export default function Cancelled() {
               <ShieldPlus size={22} />
             </button>
           </div>
-        </div>
+        </MapArea>
 
         {/* ---------------- sheet ---------------- */}
-        <div className="bg-white rounded-t-[20px] px-[22px] pt-[24px] pb-[18px]">
+        <div className="bg-white rounded-t-[20px] px-[22px] pt-[24px] pb-[calc(18px+var(--sab))]">
           <div className="text-[25px] font-bold text-[#1c2338] leading-none">订单已取消</div>
           <div className="mt-[18px] h-px bg-[#F0F1F3]" />
 
@@ -97,8 +99,8 @@ export default function Cancelled() {
           </div>
 
           <button
-            className="mt-[22px] w-full rounded-[28px] py-[17px] text-white text-[21px] font-bold leading-none press"
-            style={{ background: 'linear-gradient(90deg,#FF7A22,#F74C00)', boxShadow: '0 12px 26px rgba(250,88,0,0.35)' }}
+            className="mt-[22px] w-full rounded-[28px] py-[17px] text-white text-[21px] font-bold leading-none press shadow-[0_12px_26px_rgba(250,88,0,0.35)]"
+            style={{ background: 'linear-gradient(90deg,#FF7A22,#F74C00)' }}
             onClick={() => nav('/calling')}
           >
             重新呼叫

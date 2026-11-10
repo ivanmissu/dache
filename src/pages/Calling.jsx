@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import FakeMap, { HOME_LABELS } from '../components/FakeMap.jsx'
+import MapArea from '../components/MapArea.jsx'
 import {
   LogoCar,
   CarTop,
@@ -57,7 +58,7 @@ export default function Calling() {
     >
       <div className="page-scroll">
         {/* ---------------- map ---------------- */}
-        <div className="relative h-[300px] shrink-0">
+        <MapArea height={300}>
           <FakeMap theme="home" labels={HOME_LABELS}>
             {/* cars */}
             <div className="absolute left-[132px] top-[82px]"><CarTop size={30} rotate={182} /></div>
@@ -74,7 +75,7 @@ export default function Calling() {
             <div className="absolute left-[181px] top-[205px] w-[26px] h-[26px] rounded-full bg-[#FA6805] border-[4px] border-white shadow-[0_2px_8px_rgba(250,104,5,0.5)]" />
 
             {/* dotted connector */}
-            <svg className="absolute inset-0 w-full h-full" viewBox="0 0 393 300" fill="none">
+            <svg className="absolute left-0 top-0 w-[393px] h-[300px]" viewBox="0 0 393 300" fill="none">
               <path
                 d="M194 172 V196"
                 stroke="#FA6805"
@@ -98,10 +99,7 @@ export default function Calling() {
                 >
                   正在为您寻找附近司机...
                 </div>
-                <div
-                  className="absolute w-[13px] h-[13px] rotate-45"
-                  style={{ background: '#FA6805', left: 18, bottom: -5, borderRadius: 2 }}
-                />
+                <div className="absolute left-[18px] bottom-[-5px] w-[13px] h-[13px] rounded-[2px] rotate-45 bg-[#FA6805]" />
               </div>
               <div className="mt-[9px] ml-[28px] bg-white rounded-[9px] px-[13px] py-[8px] text-[13px] text-[#8B94A5] leading-none shadow-[0_3px_12px_rgba(30,40,60,0.1)] inline-block">
                 预计1-3分钟内接单
@@ -135,13 +133,13 @@ export default function Calling() {
               <ShieldPlus size={22} />
             </button>
           </div>
-        </div>
+        </MapArea>
 
         {/* ---------------- sheet ---------------- */}
-        <div className="px-[18px] pt-[20px] pb-[16px]">
+        <div className="px-[18px] pt-[18px] pb-[14px]">
           {/* title */}
           <div className="flex items-start justify-between">
-            <div className="text-[24px] font-bold text-[#F9571F] leading-[1.35]">
+            <div className="text-[24px] font-bold text-[#F9571F] leading-[1.3]">
               正在全力呼叫司机
               <br />
               请稍候片刻
@@ -155,19 +153,20 @@ export default function Calling() {
             </button>
           </div>
 
-          <button className="mt-[10px] flex items-center gap-[4px] text-[14.5px] text-[#8B94A5] press">
+          <button className="mt-[8px] flex items-center gap-[4px] text-[14.5px] leading-none text-[#8B94A5] press">
             已选择1个车型，预计<span className="text-[#F9571F] font-semibold">15.98元</span>
             <ChevronRight size={13} color="#B7BDC9" />
           </button>
 
           {/* extra cars card */}
-          <div className="mt-[16px] bg-white rounded-[16px] px-[16px] pt-[18px] pb-[10px] shadow-[0_6px_22px_rgba(120,80,40,0.06)]">
-            <div className="flex items-center justify-between">
+          <div className="mt-[14px] bg-white rounded-[16px] px-[11px] pt-[15px] pb-[7px] shadow-[0_6px_22px_rgba(120,80,40,0.06)]">
+            {/* 标题行和下面各行同样留 10px 行内边距：标题与车型图标左对齐，「全选」方框与各行方框右对齐 */}
+            <div className="flex items-center justify-between px-[10px]">
               <span className="text-[19px] font-bold text-[#F9571F] leading-none">追加车型 更快应答</span>
               <div className="flex items-center gap-[10px]">
                 <span className="text-[15px] text-[#8B94A5] leading-none">全选</span>
                 <button className="press" onClick={() => toggle('all')}>
-                  <CheckSquare size={25} checked={!!checked.all} />
+                  <CheckSquare size={24} checked={!!checked.all} />
                 </button>
               </div>
             </div>
@@ -176,16 +175,13 @@ export default function Calling() {
               {EXTRA_ROWS.map((r) => (
                 <div
                   key={r.id}
-                  className="rounded-[11px] px-[5px] py-[12px] flex items-center gap-[7px]"
+                  className="rounded-[11px] px-[10px] py-[9px] flex items-center gap-[8px]"
                   style={{ background: r.hot ? '#FDF0EA' : 'transparent' }}
                 >
                   <Badge kind={r.badge} />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-[6px]">
-                      <span
-                        className="font-bold text-[#1c2338] leading-none whitespace-nowrap truncate"
-                        style={{ fontSize: r.tag ? '11px' : '12px' }}
-                      >
+                      <span className="text-[13px] font-bold text-[#1c2338] leading-[1.3] whitespace-nowrap truncate">
                         {r.title}
                       </span>
                       {r.tag && (
@@ -199,8 +195,9 @@ export default function Calling() {
                     </div>
                   </div>
                   <div className="text-right shrink-0">
-                    <div className="flex items-center justify-end gap-[3px] whitespace-nowrap">
-                      <InfoDot size={12} />
+                    {/* 大小字号按基线对齐，小图标单独垂直居中 */}
+                    <div className="flex items-baseline justify-end gap-[3px] whitespace-nowrap leading-none">
+                      <span className="self-center"><InfoDot size={12} /></span>
                       <span className="text-[10.5px] text-[#8B94A5]">{r.line1.prefix}</span>
                       <span className="text-[17px] font-bold text-[#16203A] leading-none">{r.line1.amount}</span>
                       {r.line1.unit && <span className="text-[10.5px] text-[#5B6474]">{r.line1.unit}</span>}
@@ -221,7 +218,7 @@ export default function Calling() {
       </div>
 
       {/* ---------------- bottom bar ---------------- */}
-      <div className="shrink-0 px-[18px] pt-[14px] pb-[30px] flex items-center justify-between">
+      <div className="shrink-0 px-[18px] pt-[12px] pb-[calc(14px+var(--sab))] flex items-center justify-between">
         <div>
           <div className="flex items-baseline gap-[3px]">
             <span className="text-[15px] font-bold text-[#1c2338]">预计</span>
@@ -231,8 +228,8 @@ export default function Calling() {
           <div className="text-[13px] text-[#9AA1B1] mt-[5px]">共17个车型</div>
         </div>
         <button
-          className="rounded-[13px] px-[30px] py-[16px] text-white text-[17px] font-bold leading-none press"
-          style={{ background: 'linear-gradient(135deg,#FF7A18,#FC5201)', boxShadow: '0 10px 22px rgba(252,82,1,0.32)' }}
+          className="rounded-[13px] px-[30px] py-[15px] text-white text-[17px] font-bold leading-none whitespace-nowrap press shrink-0 shadow-[0_10px_22px_rgba(252,82,1,0.32)]"
+          style={{ background: 'linear-gradient(135deg,#FF7A18,#FC5201)' }}
           onClick={() => nav('/arriving')}
         >
           追加车型

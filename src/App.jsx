@@ -1,7 +1,5 @@
 import { Routes, Route, useLocation } from 'react-router-dom'
 import { useEffect } from 'react'
-import StatusBar from './components/StatusBar.jsx'
-import HomeIndicator from './components/HomeIndicator.jsx'
 import Home from './pages/Home.jsx'
 import Pickup from './pages/Pickup.jsx'
 import Dropoff from './pages/Dropoff.jsx'
@@ -24,7 +22,6 @@ export default function App() {
   return (
     <div className="shell-outer">
       <div className="phone no-select">
-        <StatusBar />
         <div className="page">
           <ScrollToTop />
           <Routes>
@@ -39,7 +36,6 @@ export default function App() {
             <Route path="/profile" element={<Profile />} />
           </Routes>
         </div>
-        <HomeIndicator />
       </div>
     </div>
   )

@@ -43,7 +43,7 @@ export default function Profile() {
     <div className="flex flex-col h-full" style={{ background: '#F5F6F8' }}>
       <div className="page-scroll" style={{ background: 'linear-gradient(180deg,#FDEFE5 0%,#FDF4EC 26%,#F5F6F8 42%)' }}>
         {/* header */}
-        <div className="pt-[52px] px-[18px] flex items-center">
+        <div className="pt-[calc(18px+var(--sat))] px-[18px] flex items-center">
           <AvatarPlaceholder size={58} />
           <div className="ml-[13px] flex-1">
             <div className="text-[20px] font-bold text-[#F9571F] leading-none">福利打车用户</div>
@@ -65,16 +65,17 @@ export default function Profile() {
         {/* member card */}
         <div className="mx-[14px] mt-[16px] rounded-[16px] px-[18px] pt-[16px] pb-[15px] relative overflow-hidden" style={{ background: 'linear-gradient(100deg,#FDEEE1 0%,#FCDFC8 100%)' }}>
           {/* crown watermark */}
-          <svg className="absolute right-[16px] top-[6px]" width="120" height="92" viewBox="0 0 120 92" fill="none" opacity="0.45">
+          <svg className="absolute right-[14px] top-[-8px] w-[104px] h-[80px]" viewBox="0 0 120 92" fill="none" opacity="0.45">
             <path d="M28 44 38 52 60 28l22 24 10-8-7 34H35l-7-34Z" fill="#F8C99B" />
             <rect x="33" y="74" width="54" height="10" rx="3" fill="#F5BE89" />
             <rect x="24" y="82" width="72" height="8" rx="3" fill="#F2B47C" />
           </svg>
-          <div className="flex items-center">
+          {/* 内容层加 relative，叠在皇冠水印之上（否则水印会盖住右侧文字） */}
+          <div className="relative flex items-center">
             <span className="text-[23px] font-black italic text-[#F9571F] leading-none">V1</span>
             <span className="text-[18px] font-bold text-[#F9571F] leading-none ml-[8px]">新享会员</span>
           </div>
-          <div className="mt-[11px] flex items-center">
+          <div className="relative mt-[11px] flex items-center">
             <div className="w-[128px] h-[8px] rounded-full overflow-hidden" style={{ background: '#F8D9C4' }}>
               <div className="h-full w-[30%] rounded-full" style={{ background: 'linear-gradient(90deg,#FF8422,#FC4F00)' }} />
             </div>
@@ -86,15 +87,16 @@ export default function Profile() {
           >
             查看详情
           </button>
-          <div className="mt-[14px] flex items-center">
+          {/* 三项权益按内容宽度左 / 中 / 右分布（原来每项固定 1/3 宽，六个字的那项会和后一项重叠） */}
+          <div className="relative mt-[14px] flex items-center justify-between gap-[6px]">
             {[
-              { icon: <CrownIcon size={19} />, text: '打车更省钱' },
-              { icon: <ShieldCheckOrange size={19} />, text: '专属优惠权益' },
-              { icon: <GiftSmall size={19} />, text: '享会员活动' },
-            ].map((b, i) => (
-              <div key={b.text} className="flex items-center gap-[6px]" style={{ width: '33.3%' }}>
+              { icon: <CrownIcon size={18} />, text: '打车更省钱' },
+              { icon: <ShieldCheckOrange size={18} />, text: '专属优惠权益' },
+              { icon: <GiftSmall size={18} />, text: '享会员活动' },
+            ].map((b) => (
+              <div key={b.text} className="flex items-center gap-[5px] min-w-0">
                 {b.icon}
-                <span className="text-[13.5px] text-[#F9571F] leading-none">{b.text}</span>
+                <span className="text-[13px] text-[#F9571F] leading-none whitespace-nowrap">{b.text}</span>
               </div>
             ))}
           </div>
@@ -128,11 +130,11 @@ export default function Profile() {
           </div>
           <div className="mt-[13px] h-px bg-[#F4F5F7]" />
           <div className="flex flex-col items-center pt-[14px]">
-            <img src="assets/empty-trip.png" alt="" className="w-[220px] h-[86px] object-contain" />
+            <img src="assets/empty-trip.webp" alt="" width="473" height="258" decoding="async" className="w-[220px] h-[86px] object-contain" />
             <div className="text-[14.5px] text-[#9AA1B1] mt-[2px]">还没有行程哦，快去打车出发吧～</div>
             <button
-              className="mt-[14px] rounded-full px-[38px] py-[13px] text-white text-[17px] font-bold leading-none press"
-              style={{ background: 'linear-gradient(135deg,#FF7A18,#FC5201)', boxShadow: '0 10px 22px rgba(252,82,1,0.28)' }}
+              className="mt-[14px] rounded-full px-[38px] py-[13px] text-white text-[17px] font-bold leading-none press shadow-[0_10px_22px_rgba(252,82,1,0.28)]"
+              style={{ background: 'linear-gradient(135deg,#FF7A18,#FC5201)' }}
               onClick={() => nav('/')}
             >
               去打车

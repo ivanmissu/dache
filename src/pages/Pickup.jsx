@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
-import { ChevronRight, ChevronLeft, Clock, PinSolid, HomeSetIcon, BuildingIcon, MapPickIcon, Flame, PlusCircle, WarnCircle } from '../components/Icons.jsx'
+import PageHeader from '../components/PageHeader.jsx'
+import { ChevronRight, Clock, PinSolid, HomeSetIcon, BuildingIcon, MapPickIcon, Flame, PlusCircle, WarnCircle } from '../components/Icons.jsx'
 
 const POINTS = [
   {
@@ -54,19 +55,15 @@ export default function Pickup() {
       className="flex flex-col h-full"
       style={{ background: 'linear-gradient(180deg,#FDEFE7 0%,#FDF6F2 34%,#FDF4EE 100%)' }}
     >
-      {/* header */}
-      <div className="relative shrink-0 pt-[48px] pb-[10px] flex items-center justify-center">
-        <button className="absolute left-[14px] top-[46px] p-[6px] press" onClick={() => nav(-1)}>
-          <ChevronLeft size={23} />
-        </button>
-        <span className="text-[18px] font-bold text-[#1c2338]">选择上车点</span>
-      </div>
+      <PageHeader title="选择上车点" onBack={() => nav(-1)} />
 
-      <div className="page-scroll px-[14px] pb-[30px]">
+      <div className="page-scroll px-[14px] pt-[4px] pb-[calc(30px+var(--sab))]">
         {/* search */}
-        <div className="bg-white rounded-[16px] px-[18px] py-[19px] flex items-center gap-[13px] shadow-[0_6px_20px_rgba(120,80,40,0.05)]">
-          <span className="w-[11px] h-[11px] rounded-full bg-[#FC5201] shrink-0" />
-          <input className="flex-1 text-[19px] text-[#1c2338] placeholder:text-[#9BA6B8]" placeholder="输入上车点" />
+        <div className="bg-white rounded-[16px] px-[18px] py-[19px] flex items-center gap-[11px] shadow-[0_6px_20px_rgba(120,80,40,0.05)]">
+          <span className="w-[20px] flex justify-center shrink-0">
+            <span className="w-[11px] h-[11px] rounded-full bg-[#FC5201]" />
+          </span>
+          <input className="flex-1 min-w-0 text-[19px] leading-[1.3] text-[#1c2338] placeholder:text-[#9BA6B8]" placeholder="输入上车点" />
         </div>
 
         {/* quick actions */}
@@ -80,8 +77,11 @@ export default function Pickup() {
 
         {/* recommended */}
         <div className="mt-[13px] bg-white rounded-[16px] pt-[17px] pb-[6px] shadow-[0_6px_20px_rgba(120,80,40,0.05)]">
-          <div className="flex items-center gap-[8px] px-[18px]">
-            <Flame size={21} />
+          {/* 标题行和下面每一行用同样的「20px 图标位 + 11px 间距」，图标居中对齐、文字左边缘对齐 */}
+          <div className="flex items-center gap-[11px] px-[18px]">
+            <span className="w-[20px] flex justify-center shrink-0">
+              <Flame size={21} />
+            </span>
             <span className="text-[17px] font-bold text-[#FC5300] leading-none">推荐上车点</span>
           </div>
 
@@ -89,8 +89,9 @@ export default function Pickup() {
             {POINTS.map((p, i) => (
               <div key={p.id}>
                 {p.hot ? (
-                  <div className="mx-[10px] rounded-[12px]" style={{ background: '#FDEEE4' }}>
-                    <PointRow p={p} onClick={() => nav('/dropoff')} />
+                  // 高亮底色离卡片边 8px、行内再留 10px，合计仍是 18px，图标和文字与下面各行对齐
+                  <div className="mx-[8px] rounded-[12px]" style={{ background: '#FDEEE4' }}>
+                    <PointRow p={p} inset onClick={() => nav('/dropoff')} />
                   </div>
                 ) : (
                   <PointRow p={p} onClick={() => nav('/dropoff')} />
@@ -106,12 +107,12 @@ export default function Pickup() {
 
         {/* bottom links */}
         <div className="mt-[22px] flex items-center justify-center gap-[18px]">
-          <button className="flex items-center gap-[6px] text-[15px] text-[#F96A1B] font-medium press">
+          <button className="flex items-center gap-[6px] text-[15px] leading-none text-[#F96A1B] font-medium press">
             <PlusCircle size={20} color="#F96A1B" />
             新增地点
           </button>
           <span className="w-px h-[18px] bg-[#E8D5C8]" />
-          <button className="flex items-center gap-[6px] text-[15px] text-[#F96A1B] font-medium press">
+          <button className="flex items-center gap-[6px] text-[15px] leading-none text-[#F96A1B] font-medium press">
             <WarnCircle size={20} color="#F96A1B" />
             地点报错
           </button>
@@ -125,7 +126,7 @@ function QuickAction({ icon, label }) {
   return (
     <button className="flex-1 flex items-center justify-center gap-[9px] press">
       {icon}
-      <span className="text-[15px] font-semibold text-[#1c2338]">{label}</span>
+      <span className="text-[15px] font-semibold text-[#1c2338] leading-none">{label}</span>
     </button>
   )
 }
@@ -134,19 +135,20 @@ function Divider() {
   return <span className="w-px bg-[#EEF0F3] self-stretch my-[2px]" />
 }
 
-function PointRow({ p, onClick }) {
+function PointRow({ p, onClick, inset = false }) {
   return (
-    <button className="w-full flex items-center gap-[11px] px-[18px] py-[15px] press text-left" onClick={onClick}>
-      {p.icon === 'clock' ? (
-        <Clock size={20} color="#F97316" />
-      ) : (
-        <PinSolid size={18} color="#F96A1B" />
-      )}
+    <button
+      className={`w-full flex items-center gap-[11px] py-[15px] press text-left ${inset ? 'px-[10px]' : 'px-[18px]'}`}
+      onClick={onClick}
+    >
+      <span className="w-[20px] flex justify-center shrink-0">
+        {p.icon === 'clock' ? <Clock size={20} color="#F97316" /> : <PinSolid size={18} color="#F96A1B" />}
+      </span>
       <span className="flex-1 min-w-0">
         <span className="block text-[14px] font-semibold text-[#1c2338] leading-snug truncate">{p.title}</span>
         <span className="block text-[12px] text-[#98A1B2] leading-snug mt-[3px] truncate">{p.sub}</span>
       </span>
-      <span className="text-[12.5px] text-[#98A1B2] shrink-0">{p.dist}</span>
+      <span className="text-[12.5px] text-[#98A1B2] leading-none shrink-0">{p.dist}</span>
       <ChevronRight size={15} color="#B9BFCA" />
     </button>
   )

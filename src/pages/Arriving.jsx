@@ -1,5 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import FakeMap from '../components/FakeMap.jsx'
+import MapArea from '../components/MapArea.jsx'
+import { rem } from '../lib/rem.js'
 import {
   ChevronLeft,
   ChevronRight,
@@ -32,13 +34,15 @@ const ARRIVE_LABELS = [
 export default function Arriving() {
   const nav = useNavigate()
   return (
-    <div className="flex flex-col h-full bg-[#F5F6F8]">
+    // 页面底色用白色，和底部司机面板连成一片（屏幕比内容高时不露出灰底）
+    <div className="flex flex-col h-full bg-white">
       <div className="page-scroll">
         {/* ---------------- map ---------------- */}
-        <div className="relative h-[483px] shrink-0">
+        <MapArea height={483}>
           <FakeMap theme="cool" labels={ARRIVE_LABELS} dense>
             {/* route: up, right, down to pin */}
-            <svg className="absolute inset-0 w-full h-full" viewBox="0 0 393 483" fill="none">
+            {/* 画布固定为设计稿尺寸并靠左上角，路线和图钉、车辆的定位坐标一一对应 */}
+            <svg className="absolute left-0 top-0 w-[393px] h-[483px]" viewBox="0 0 393 483" fill="none">
               <path
                 d="M130 320 V112 Q130 104 138 104 H262 Q270 104 270 112 V236"
                 stroke="#FA6805"
@@ -63,7 +67,8 @@ export default function Arriving() {
             <div className="absolute left-[262px] top-[236px] w-[13px] h-[13px] rounded-full bg-[#FA5A00] border-[2.5px] border-white" />
 
             {/* edit pickup card */}
-            <button className="absolute left-[225px] top-[182px] bg-white rounded-[11px] px-[15px] py-[11px] flex items-center gap-[8px] press shadow-[0_4px_16px_rgba(30,40,60,0.14)]">
+            {/* 卡片放在图钉正上方（底边 190 < 图钉顶 196），不再盖住图钉 */}
+            <button className="absolute left-[212px] top-[153px] bg-white rounded-[11px] px-[15px] py-[11px] flex items-center gap-[8px] press shadow-[0_4px_16px_rgba(30,40,60,0.14)]">
               <span className="text-[15px] font-bold text-[#1c2338] leading-none">修改上车点</span>
               <ChevronRight size={15} color="#8B94A5" />
             </button>
@@ -73,7 +78,8 @@ export default function Arriving() {
               <div className="inline-block bg-white rounded-[12px] px-[18px] py-[13px] text-[17px] font-bold text-[#1c2338] leading-none shadow-[0_4px_16px_rgba(30,40,60,0.12)]">
                 司机正在赶来
               </div>
-              <div className="mt-[12px] ml-[52px] text-[15px] font-bold text-[#1c2338]" style={{ textShadow: '0 0 6px #fff, 0 0 6px #fff' }}>
+              {/* 文字底边 (≈296) 在车辆图标顶 (300) 之上，不和车重叠 */}
+              <div className="mt-[5px] ml-[52px] text-[15px] leading-none font-bold text-[#1c2338] whitespace-nowrap [text-shadow:0_0_6px_#fff,0_0_6px_#fff]">
                 德辰国际-西门-对面
               </div>
             </div>
@@ -90,7 +96,7 @@ export default function Arriving() {
 
             {/* chat */}
             <div className="absolute left-[12px] top-[380px] flex items-center gap-[8px]">
-              <img src="assets/driver-avatar.png" alt="" className="w-[38px] h-[38px] rounded-full object-cover border-[2px] border-white shadow-[0_2px_8px_rgba(30,40,60,0.2)]" />
+              <img src="assets/driver-avatar.webp" alt="" width="126" height="126" decoding="async" className="w-[38px] h-[38px] shrink-0 rounded-full object-cover border-[2px] border-white shadow-[0_2px_8px_rgba(30,40,60,0.2)]" />
               <div className="rounded-[10px] px-[14px] py-[10px] text-white text-[14px] leading-none" style={{ background: 'rgba(62,72,84,0.72)' }}>
                 你好，很高兴为你服务
               </div>
@@ -136,22 +142,22 @@ export default function Arriving() {
               <Crosshair size={21} />
             </button>
           </div>
-        </div>
+        </MapArea>
 
         {/* ---------------- orange strip ---------------- */}
         <div className="h-[46px] flex items-center px-[22px] gap-[8px] relative overflow-hidden" style={{ background: 'linear-gradient(90deg,#FF7A22,#FA5E00)' }}>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="shrink-0">
+          <svg width={rem(20)} height={rem(20)} viewBox="0 0 24 24" fill="none" className="shrink-0">
             <path d="M13 2 4 13.5h6L9.5 22 20 9.5h-7L13 2Z" fill="#fff" />
           </svg>
           <span className="text-white text-[16px] font-bold leading-none whitespace-nowrap">5秒接单，高峰期打车快人一步！</span>
           <span className="text-white text-[16px] font-bold leading-none ml-[6px]">（3）</span>
-          <svg className="absolute right-[70px] top-0 h-full" width="90" height="46" viewBox="0 0 90 46" fill="none" opacity="0.18">
+          <svg className="absolute right-[70px] top-0 w-[90px] h-[46px]" viewBox="0 0 90 46" fill="none" opacity="0.18">
             <path d="M52 2 30 24h14L36 44 62 18H46L52 2Z" fill="#fff" />
           </svg>
         </div>
 
         {/* ---------------- driver sheet ---------------- */}
-        <div className="bg-white rounded-t-[20px] -mt-[14px] relative px-[20px] pt-[20px] pb-[18px]">
+        <div className="bg-white rounded-t-[20px] -mt-[14px] relative px-[20px] pt-[20px] pb-[calc(18px+var(--sab))]">
           <div className="text-[23px] font-bold text-[#1c2338] leading-none">司机即将到达</div>
           <div className="mt-[12px] text-[13px] text-[#8B94A5] leading-[1.75]">
             车辆正前往<span className="text-[#F9571F]">德辰国际-西门-对面</span>接你，为保障你的权益请勿与司机线下交易，若行程有变，可在 <span className="text-[#F9571F] font-semibold">15:09</span> 前免费取消
@@ -179,10 +185,13 @@ export default function Arriving() {
             </div>
             <div className="flex flex-col items-end">
               <div className="relative">
-                <img src="assets/car-blue-suv.png" alt="" className="w-[128px] h-[70px] object-contain" />
+                <img src="assets/car-blue-suv.webp" alt="" width="384" height="209" decoding="async" className="w-[128px] h-[70px] object-contain" />
                 <img
-                  src="assets/driver-avatar.png"
+                  src="assets/driver-avatar.webp"
                   alt=""
+                  width="126"
+                  height="126"
+                  decoding="async"
                   className="absolute right-[-2px] bottom-[2px] w-[42px] h-[42px] rounded-full object-cover border-[2px] border-white"
                 />
               </div>
