@@ -15,9 +15,10 @@ export default function PromoBanner({ className = '' }) {
       <img
         src="assets/banner-gift.webp"
         alt=""
-        width="348"
-        height="190"
+        width="231"
+        height="126"
         decoding="async"
+        fetchpriority="high"
         className="absolute right-[30px] top-0 h-full w-auto object-contain pointer-events-none"
         style={{
           maskImage: 'linear-gradient(90deg, transparent 0%, #000 22%)',

@@ -130,7 +130,7 @@ export default function Profile() {
           </div>
           <div className="mt-[13px] h-px bg-[#F4F5F7]" />
           <div className="flex flex-col items-center pt-[14px]">
-            <img src="assets/empty-trip.webp" alt="" width="473" height="258" decoding="async" className="w-[220px] h-[86px] object-contain" />
+            <img src="assets/empty-trip.webp" alt="" width="315" height="172" loading="lazy" decoding="async" className="w-[220px] h-[86px] object-contain" />
             <div className="text-[14.5px] text-[#9AA1B1] mt-[2px]">还没有行程哦，快去打车出发吧～</div>
             <button
               className="mt-[14px] rounded-full px-[38px] py-[13px] text-white text-[17px] font-bold leading-none press shadow-[0_10px_22px_rgba(252,82,1,0.28)]"
