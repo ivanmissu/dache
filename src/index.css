@@ -1,0 +1,135 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand: #fe5d00;
+  --color-brand-deep: #fc5300;
+  --color-brand-bright: #ff7100;
+  --color-brand-light: #ff8a1e;
+  --color-ink: #1c2338;
+  --color-ink-soft: #2b3550;
+  --color-gray: #7b7f8f;
+  --color-gray-light: #9aa1b1;
+  --color-map-bg: #f5f7fa;
+  --color-page-bg: #f5f6f8;
+  --color-cream: #fdf1e9;
+
+  --font-sans: -apple-system, BlinkMacSystemFont, "PingFang SC", "Noto Sans SC",
+    "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    margin: 0;
+    font-family: var(--font-sans);
+    color: var(--color-ink);
+    background: #e9ebef;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+    overflow: hidden;
+  }
+
+  button {
+    font-family: inherit;
+    cursor: pointer;
+    border: none;
+    background: none;
+    padding: 0;
+    color: inherit;
+  }
+
+  input {
+    font-family: inherit;
+    border: none;
+    outline: none;
+    background: transparent;
+  }
+}
+
+@layer components {
+  /* ---------- phone shell ---------- */
+  .shell-outer {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .phone {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  @media (min-width: 640px) {
+    .shell-outer {
+      background: radial-gradient(120% 120% at 50% 0%, #f2f3f7 0%, #dfe2e8 100%);
+    }
+    .phone {
+      width: min(393px, 94vw);
+      height: min(824px, 94vh);
+      border-radius: 44px;
+      box-shadow:
+        0 0 0 11px #111318,
+        0 0 0 13px #2a2d35,
+        0 30px 80px rgba(15, 23, 42, 0.35);
+      background: #fff;
+    }
+  }
+
+  .page {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .page-scroll {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .page-scroll::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* ---------- shared bits ---------- */
+  .brand-gradient {
+    background: linear-gradient(90deg, #ff7d1c 0%, #fc5201 100%);
+  }
+
+  .brand-gradient-135 {
+    background: linear-gradient(135deg, #ff8422 0%, #fc4f00 100%);
+  }
+
+  .banner-gradient {
+    background: linear-gradient(90deg, #f8702c 0%, #fe8c48 45%, #fdc590 100%);
+  }
+
+  .press {
+    transition: transform 0.12s ease, opacity 0.12s ease;
+  }
+  .press:active {
+    transform: scale(0.97);
+    opacity: 0.92;
+  }
+
+  .no-select {
+    user-select: none;
+    -webkit-user-select: none;
+  }
+}
