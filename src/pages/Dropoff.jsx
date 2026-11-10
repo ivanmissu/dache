@@ -1,16 +1,6 @@
 import { useNavigate } from 'react-router-dom'
-import {
-  ChevronLeft,
-  ChevronRight,
-  PinSolid,
-  HomeSetIcon,
-  BuildingIcon,
-  MapPickIcon,
-  Star,
-  SendIcon,
-  Crosshair,
-  PlusIcon,
-} from '../components/Icons.jsx'
+import PageHeader, { HeaderCapsule } from '../components/PageHeader.jsx'
+import { PinSolid, HomeSetIcon, BuildingIcon, MapPickIcon, Star, PlusIcon } from '../components/Icons.jsx'
 
 const RECOMMEND = [
   {
@@ -65,94 +55,97 @@ export default function Dropoff() {
       className="flex flex-col h-full"
       style={{ background: 'linear-gradient(180deg,#FDEFE7 0%,#FDF6F2 34%,#FDF4EE 100%)' }}
     >
-      {/* header */}
-      <div className="relative shrink-0 pt-[48px] pb-[10px] flex items-center justify-center">
-        <button className="absolute left-[14px] top-[46px] p-[6px] press" onClick={() => nav(-1)}>
-          <ChevronLeft size={23} />
-        </button>
-        <span className="text-[18px] font-bold text-[#1c2338]">选择下车点</span>
-        <div className="absolute right-[14px] top-[46px] flex items-center bg-white rounded-full pl-[13px] pr-[13px] py-[9px] shadow-[0_2px_10px_rgba(30,40,60,0.06)]">
-          <SendIcon size={19} />
-          <span className="w-px h-[17px] bg-[#E8EAEF] mx-[11px]" />
-          <Crosshair size={19} />
-        </div>
-      </div>
+      <PageHeader title="选择下车点" onBack={() => nav(-1)} right={<HeaderCapsule />} />
 
-      <div className="page-scroll px-[14px] pb-[30px]">
+      {/*
+        本页所有行都用同一套左侧结构：18px 内边距 + 20px 图标位（图标居中）+ 12px 间距，
+        所以搜索框的圆点、星标、定位图钉在一条竖线上，各行文字（含进站口按钮）左边缘对齐。
+      */}
+      <div className="page-scroll px-[14px] pt-[4px] pb-[calc(24px+var(--sab))]">
         {/* search */}
-        <div className="bg-white rounded-[16px] pl-[18px] pr-[10px] py-[12px] flex items-center gap-[10px] shadow-[0_6px_20px_rgba(120,80,40,0.05)]">
-          <span className="w-[11px] h-[11px] rounded-full bg-[#F0432C] shrink-0" />
-          <input className="flex-1 min-w-0 text-[19px] text-[#1c2338] placeholder:text-[#9BA6B8]" placeholder="输入下车点" />
-          <button className="flex items-center gap-[4px] border-[1.5px] border-[#FC5201]/45 rounded-[11px] px-[13px] py-[9px] press shrink-0 whitespace-nowrap">
-            <PlusIcon size={15} color="#1c2338" />
-            <span className="text-[15px] font-semibold text-[#1c2338] leading-none">途经点</span>
+        <div className="bg-white rounded-[16px] pl-[18px] pr-[9px] py-[9px] flex items-center gap-[12px] shadow-[0_6px_20px_rgba(120,80,40,0.05)]">
+          <IconSlot>
+            <span className="w-[11px] h-[11px] rounded-full bg-[#F0432C]" />
+          </IconSlot>
+          {/* 输入框字号不能小于 16px（缩放后），否则 iOS 聚焦时会自动放大页面 */}
+          <input className="flex-1 min-w-0 text-[18px] leading-[1.3] text-[#1c2338] placeholder:text-[#9BA6B8]" placeholder="输入下车点" />
+          <button className="flex items-center gap-[4px] border-[1.5px] border-[#FC5201]/45 rounded-[10px] px-[12px] py-[8px] press shrink-0 whitespace-nowrap">
+            <PlusIcon size={14} color="#1c2338" />
+            <span className="text-[14.5px] font-semibold text-[#1c2338] leading-none">途经点</span>
           </button>
         </div>
 
         {/* quick actions */}
-        <div className="mt-[13px] bg-white rounded-[16px] py-[18px] flex items-stretch shadow-[0_6px_20px_rgba(120,80,40,0.05)]">
-          <QuickAction icon={<HomeSetIcon size={23} />} label="设置家" />
+        <div className="mt-[10px] bg-white rounded-[16px] py-[14px] flex items-stretch shadow-[0_6px_20px_rgba(120,80,40,0.05)]">
+          <QuickAction icon={<HomeSetIcon size={22} />} label="设置家" />
           <Divider />
-          <QuickAction icon={<BuildingIcon size={23} />} label="设置公司" />
+          <QuickAction icon={<BuildingIcon size={22} />} label="设置公司" />
           <Divider />
-          <QuickAction icon={<MapPickIcon size={23} />} label="地图选点" />
+          <QuickAction icon={<MapPickIcon size={22} />} label="地图选点" />
         </div>
 
         {/* recommend */}
         <div
-          className="mt-[13px] rounded-[16px] overflow-hidden"
+          className="mt-[10px] rounded-[16px] overflow-hidden"
           style={{ background: '#fff', border: '1px solid #FBE0CB' }}
         >
           <div
-            className="flex items-center gap-[8px] px-[18px] py-[14px]"
+            className="flex items-center gap-[12px] px-[18px] py-[11px]"
             style={{ background: 'linear-gradient(90deg,#FCE6D2,#FDF0E2)' }}
           >
-            <Star size={20} />
-            <span className="text-[17px] font-bold text-[#F96A1B] leading-none">为你推荐</span>
+            <IconSlot>
+              <Star size={19} />
+            </IconSlot>
+            <span className="text-[16.5px] font-bold text-[#F96A1B] leading-none">为你推荐</span>
           </div>
           {RECOMMEND.map((p, i) => (
             <div key={p.id}>
               <button
-                className="w-full flex items-center gap-[13px] px-[18px] py-[15px] press text-left"
+                className="w-full flex items-center gap-[12px] px-[18px] py-[10px] press text-left"
                 onClick={() => nav('/cars')}
               >
-                <PinSolid size={19} color="#F96A1B" />
+                <IconSlot>
+                  <PinSolid size={18} color="#F96A1B" />
+                </IconSlot>
                 <span className="flex-1 min-w-0">
-                  <span className="block text-[16px] font-semibold text-[#1c2338] leading-snug truncate">{p.title}</span>
-                  <span className="block text-[12.5px] text-[#98A1B2] leading-snug mt-[3px] truncate">{p.sub}</span>
+                  <span className="block text-[15.5px] font-semibold text-[#1c2338] leading-[1.35] truncate">{p.title}</span>
+                  <span className="block text-[12.5px] text-[#98A1B2] leading-[1.35] mt-[2px] truncate">{p.sub}</span>
                 </span>
-                <span className="text-[13px] text-[#98A1B2] shrink-0">{p.dist}</span>
+                <span className="text-[12.5px] text-[#98A1B2] leading-none shrink-0">{p.dist}</span>
               </button>
-              {i < RECOMMEND.length - 1 && <div className="mx-[18px] h-px bg-[#F5E7DC]" />}
+              {i < RECOMMEND.length - 1 && <div className="ml-[50px] mr-[18px] h-px bg-[#F5E7DC]" />}
             </div>
           ))}
         </div>
 
         {/* stations */}
-        <div className="mt-[13px] flex flex-col gap-[13px]">
+        <div className="mt-[10px] flex flex-col gap-[10px]">
           {STATIONS.map((s) => (
-            <div key={s.id} className="bg-white rounded-[16px] px-[18px] pt-[17px] pb-[17px] shadow-[0_6px_20px_rgba(120,80,40,0.05)]">
-              <div className="flex items-start gap-[13px]">
-                <PinSolid size={19} color="#F96A1B" />
+            <div key={s.id} className="bg-white rounded-[16px] px-[18px] pt-[13px] pb-[14px] shadow-[0_6px_20px_rgba(120,80,40,0.05)]">
+              <div className="flex items-start gap-[12px]">
+                {/* 图钉与标题首行垂直居中 */}
+                <IconSlot className="h-[22px]">
+                  <PinSolid size={18} color="#F96A1B" />
+                </IconSlot>
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-baseline justify-between gap-[10px]">
-                    <span className="text-[16.5px] font-bold text-[#1c2338] leading-snug truncate">{s.title}</span>
-                    <span className="text-[13px] text-[#8B94A5] shrink-0">{s.dist}</span>
+                  <div className="flex items-center justify-between gap-[10px]">
+                    <span className="text-[16px] font-bold text-[#1c2338] leading-[22px] truncate">{s.title}</span>
+                    <span className="text-[12.5px] text-[#8B94A5] leading-none shrink-0">{s.dist}</span>
                   </div>
-                  <div className="text-[12.5px] text-[#98A1B2] leading-snug mt-[4px] truncate">{s.sub}</div>
+                  <div className="text-[12.5px] text-[#98A1B2] leading-[1.35] mt-[1px] truncate">{s.sub}</div>
+                  <div className="mt-[9px] grid grid-cols-2 gap-x-[8px] gap-y-[7px]">
+                    {s.gates.map((g) => (
+                      <button
+                        key={g}
+                        className="h-[30px] rounded-[7px] text-[13px] leading-none font-medium text-[#F5670C] press"
+                        style={{ background: '#FDEEE6', border: '1px solid #F8C3A2' }}
+                        onClick={() => nav('/cars')}
+                      >
+                        {g}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
-              <div className="mt-[11px] grid grid-cols-2 gap-[10px]">
-                {s.gates.map((g) => (
-                  <button
-                    key={g}
-                    className="rounded-[10px] py-[11px] text-[14px] font-medium text-[#F5670C] press"
-                    style={{ background: '#FDEEE6', border: '1px solid #F8C3A2' }}
-                    onClick={() => nav('/cars')}
-                  >
-                    {g}
-                  </button>
-                ))}
               </div>
             </div>
           ))}
@@ -162,11 +155,16 @@ export default function Dropoff() {
   )
 }
 
+/* 固定 20px 宽的图标位，图标在里面水平、垂直居中 */
+function IconSlot({ children, className = '' }) {
+  return <span className={`w-[20px] flex items-center justify-center shrink-0 ${className}`}>{children}</span>
+}
+
 function QuickAction({ icon, label }) {
   return (
-    <button className="flex-1 flex items-center justify-center gap-[9px] press">
+    <button className="flex-1 flex items-center justify-center gap-[8px] press">
       {icon}
-      <span className="text-[15px] font-semibold text-[#1c2338]">{label}</span>
+      <span className="text-[15px] font-semibold text-[#1c2338] leading-none">{label}</span>
     </button>
   )
 }

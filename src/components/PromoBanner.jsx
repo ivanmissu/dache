@@ -13,9 +13,12 @@ export default function PromoBanner({ className = '' }) {
         </span>
       </div>
       <img
-        src="assets/banner-gift.png"
+        src="assets/banner-gift.webp"
         alt=""
-        className="absolute right-[30px] top-0 h-full object-contain pointer-events-none"
+        width="348"
+        height="190"
+        decoding="async"
+        className="absolute right-[30px] top-0 h-full w-auto object-contain pointer-events-none"
         style={{
           maskImage: 'linear-gradient(90deg, transparent 0%, #000 22%)',
           WebkitMaskImage: 'linear-gradient(90deg, transparent 0%, #000 22%)',

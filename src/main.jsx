@@ -1,9 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { HashRouter } from 'react-router-dom'
-import '@fontsource/noto-sans-sc/400.css'
-import '@fontsource/noto-sans-sc/500.css'
-import '@fontsource/noto-sans-sc/700.css'
 import App from './App.jsx'
 import './index.css'
 

@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import FakeMap, { HOME_LABELS } from '../components/FakeMap.jsx'
+import MapArea from '../components/MapArea.jsx'
 import BottomNav from '../components/BottomNav.jsx'
 import PromoBanner from '../components/PromoBanner.jsx'
 import {
@@ -25,7 +26,7 @@ export default function Home() {
     <div className="flex flex-col h-full bg-[#F5F6F8]">
       <div className="page-scroll flex flex-col">
         {/* ---------------- map ---------------- */}
-        <div className="relative h-[352px] shrink-0">
+        <MapArea height={352}>
           <FakeMap theme="home" labels={HOME_LABELS}>
             {/* scattered cars */}
             <div className="absolute left-[128px] top-[224px]"><CarTop size={34} rotate={82} /></div>
@@ -46,10 +47,7 @@ export default function Home() {
                   <span className="text-white text-[16px] font-semibold leading-none">北京朝阳大悦城</span>
                   <ChevronRight size={15} color="#fff" width={2.6} />
                 </button>
-                <div
-                  className="absolute w-[14px] h-[14px] rotate-45"
-                  style={{ background: '#FA5E00', left: 30, bottom: -5, borderRadius: 3 }}
-                />
+                <div className="absolute left-[30px] bottom-[-5px] w-[14px] h-[14px] rounded-[3px] rotate-45 bg-[#FA5E00]" />
               </div>
               <div className="mt-[10px] ml-[46px] text-[13px] text-[#5B6474] whitespace-nowrap">
                 距您 2.3 公里 约 6 分钟
@@ -94,18 +92,19 @@ export default function Home() {
           <div className="absolute left-[12px] right-[12px] bottom-0">
             <PromoBanner />
           </div>
-        </div>
+        </MapArea>
 
         {/* ---------------- search card ---------------- */}
         <div className="px-[12px] mt-[12px]">
-          <div className="bg-white rounded-[18px] px-[16px] pt-[4px] pb-[12px] shadow-[0_4px_18px_rgba(30,40,60,0.05)]">
-            <button className="w-full flex items-center gap-[13px] py-[11px] press" onClick={() => nav('/pickup')}>
+          {/* 两行用同一套内边距（px-14 + 26 的圆点 + gap-13），圆点和文字左边缘上下对齐 */}
+          <div className="bg-white rounded-[18px] px-[12px] pt-[4px] pb-[12px] shadow-[0_4px_18px_rgba(30,40,60,0.05)]">
+            <button className="w-full flex items-center gap-[13px] px-[14px] py-[11px] press" onClick={() => nav('/pickup')}>
               <span className="w-[26px] h-[26px] rounded-full bg-[#D6F2E3] flex items-center justify-center shrink-0">
                 <span className="w-[10px] h-[10px] rounded-full bg-[#22C55E]" />
               </span>
-              <span className="flex-1 text-left">
+              <span className="flex-1 min-w-0 text-left">
                 <span className="block text-[17px] font-semibold text-[#1c2338] leading-tight">我的位置</span>
-                <span className="block text-[13px] text-[#9AA1B1] leading-tight mt-[3px]">北京市朝阳区朝阳路</span>
+                <span className="block text-[13px] text-[#9AA1B1] leading-tight mt-[3px] truncate">北京市朝阳区朝阳路</span>
               </span>
               <ChevronRight size={17} color="#B7BDC9" />
             </button>
@@ -116,7 +115,7 @@ export default function Home() {
               <span className="w-[26px] h-[26px] rounded-full bg-[#FDE3D2] flex items-center justify-center shrink-0">
                 <span className="w-[10px] h-[10px] rounded-full bg-[#FC5201]" />
               </span>
-              <span className="text-[19px] font-semibold text-[#1c2338]">你要去哪儿?</span>
+              <span className="flex-1 min-w-0 text-left text-[19px] font-semibold text-[#1c2338] leading-tight">你要去哪儿?</span>
             </button>
           </div>
         </div>
@@ -177,8 +176,8 @@ function CouponRow({ value, min, title, validity, price }) {
           </div>
         </div>
         <button
-          className="rounded-full px-[13px] py-[9px] text-white text-[13.5px] font-semibold leading-none whitespace-nowrap press shrink-0 ml-[8px]"
-          style={{ background: 'linear-gradient(135deg,#FF8422,#FC4F00)', boxShadow: '0 8px 16px rgba(252,79,0,0.28)' }}
+          className="rounded-full px-[13px] py-[9px] text-white text-[13.5px] font-semibold leading-none whitespace-nowrap press shrink-0 ml-[8px] shadow-[0_8px_16px_rgba(252,79,0,0.28)]"
+          style={{ background: 'linear-gradient(135deg,#FF8422,#FC4F00)' }}
         >
           ¥{price} 购买
         </button>

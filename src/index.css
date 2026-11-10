@@ -13,18 +13,43 @@
   --color-page-bg: #f5f6f8;
   --color-cream: #fdf1e9;
 
-  --font-sans: -apple-system, BlinkMacSystemFont, "PingFang SC", "Noto Sans SC",
-    "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  /* 只用系统字体：iPhone 上是苹方，安卓上是系统自带的中文黑体，不再下载网页字体 */
+  --font-sans: -apple-system, BlinkMacSystemFont, "PingFang SC", "HarmonyOS Sans SC",
+    "MiSans", "Noto Sans CJK SC", "Source Han Sans SC", "Hiragino Sans GB",
+    "Microsoft YaHei", sans-serif;
+}
+
+:root {
+  /* iPhone 安全区：在 Safari / 微信里直接打开时为 0，全屏 WebView 或添加到主屏幕时才有值 */
+  --sat: env(safe-area-inset-top, 0px);
+  --sab: env(safe-area-inset-bottom, 0px);
 }
 
 @layer base {
+  /*
+   * 整体缩放比例。样式里的 px 都按设计稿书写，构建时由 postcss-pxtorem 转成 rem，
+   * 所以改这一个值就能让文字、图标、按钮、间距一起等比放大 / 缩小。
+   * 100% = 设计稿原始大小，90% = 整体缩小到九成。
+   */
+  html {
+    font-size: 90%;
+  }
+
   html,
   body,
   #root {
     height: 100%;
   }
 
+  /* 图标在 flex 行里不被挤压变形 */
+  svg {
+    flex-shrink: 0;
+  }
+
   body {
+    /* 微信 iOS 的「字体大小」设置是通过 text-size-adjust 只放大文字，会把布局撑乱，这里固定住 */
+    -webkit-text-size-adjust: 100% !important;
+    text-size-adjust: 100% !important;
     margin: 0;
     font-family: var(--font-sans);
     color: var(--color-ink);
@@ -70,6 +95,7 @@
     flex-direction: column;
   }
 
+  /* 桌面浏览器里显示成一台手机的大小，方便预览；手机上不生效 */
   @media (min-width: 640px) {
     .shell-outer {
       background: radial-gradient(120% 120% at 50% 0%, #f2f3f7 0%, #dfe2e8 100%);

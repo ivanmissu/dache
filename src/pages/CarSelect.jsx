@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import FakeMap, { HOME_LABELS } from '../components/FakeMap.jsx'
+import MapArea from '../components/MapArea.jsx'
+import { rem } from '../lib/rem.js'
 import PromoBanner from '../components/PromoBanner.jsx'
 import {
   ChevronLeft,
@@ -18,7 +20,7 @@ const SIMPLE_ROWS = [
   {
     id: 's1',
     tab: '经济',
-    img: 'assets/car-economy.png',
+    img: 'assets/car-economy.webp',
     title: '福利特价快车',
     tags: [
       { text: '价格实惠', style: 'red' },
@@ -30,7 +32,7 @@ const SIMPLE_ROWS = [
   {
     id: 's2',
     tab: '舒适',
-    img: 'assets/car-comfort.png',
+    img: 'assets/car-comfort.webp',
     title: '福利极速快车',
     desc: '更快接单 更快出发',
     price: { prefix: '一口价', int: '11', dec: '20' },
@@ -39,7 +41,7 @@ const SIMPLE_ROWS = [
   {
     id: 's3',
     tab: '商务',
-    img: 'assets/car-suv.png',
+    img: 'assets/car-suv.webp',
     title: '福利舒适专车',
     tags: [
       { text: '宽敞舒适', style: 'red' },
@@ -51,7 +53,7 @@ const SIMPLE_ROWS = [
   {
     id: 's4',
     tab: '豪华',
-    img: 'assets/car-business.png',
+    img: 'assets/car-business.webp',
     title: '福利商务专车',
     tags: [
       { text: '高端车型', style: 'red' },
@@ -121,10 +123,11 @@ export default function CarSelect() {
   const toggle = (id) => setChecked((c) => ({ ...c, [id]: !c[id] }))
 
   return (
-    <div className="flex flex-col h-full bg-[#F5F8FB]">
+    // 页面底色跟列表面板一致：屏幕比内容高时，面板下面不会露出另一种颜色
+    <div className="flex flex-col h-full" style={{ background: multi ? '#FDF6F1' : '#fff' }}>
       <div className="page-scroll">
         {/* ---------------- map + banner ---------------- */}
-        <div className="relative z-10 h-[330px] shrink-0">
+        <MapArea height={330} className="z-10">
           <div className="absolute inset-0 overflow-hidden">
             <FakeMap theme="cool" labels={HOME_LABELS}>
               {/* scattered cars */}
@@ -134,10 +137,11 @@ export default function CarSelect() {
               <div className="absolute left-[262px] top-[228px]"><CarTop size={30} rotate={182} /></div>
               <div className="absolute left-[166px] top-[272px]"><CarTop size={30} rotate={265} /></div>
 
-              {/* route line */}
-              <svg className="absolute inset-0 w-full h-full" viewBox="0 0 393 352" fill="none">
+              {/* route line：画布固定为设计稿尺寸并靠左上角，1 个单位 = 1 设计 px，和下面图钉的定位坐标一一对应 */}
+              <svg className="absolute left-0 top-0 w-[393px] h-[352px]" viewBox="0 0 393 352" fill="none">
+                {/* 起点 (104,262) = 上车图钉尖 / 蓝点圆心，终点 (267,196) = 目的地图钉尖 */}
                 <path
-                  d="M104 262 L163 262 L163 183 L258 183 L262 196"
+                  d="M104 262 H163 V196 H267"
                   stroke="#FA6805"
                   strokeWidth="7"
                   strokeLinecap="round"
@@ -145,50 +149,55 @@ export default function CarSelect() {
                 />
                 <path d="m126 257 6 5-6 5" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" opacity="0.9" />
                 <path d="m158 216 5 6 5-6" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" opacity="0.9" />
-                <path d="m212 178 6 5-6 5" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" opacity="0.9" />
+                <path d="m212 191 6 5-6 5" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" opacity="0.9" />
               </svg>
 
               {/* destination card + pin */}
+              {/* 卡片在图钉正上方，卡片底边与图钉顶之间留 4px，互不遮挡 */}
               <button
-                className="absolute left-[220px] top-[115px] bg-white rounded-[13px] pl-[15px] pr-[12px] py-[11px] flex items-center gap-[8px] press shadow-[0_4px_16px_rgba(30,40,60,0.12)]"
+                className="absolute left-[216px] top-[102px] bg-white rounded-[12px] pl-[13px] pr-[9px] py-[10px] flex items-center gap-[6px] press shadow-[0_4px_16px_rgba(30,40,60,0.12)]"
                 onClick={() => nav('/dropoff')}
               >
                 <span>
-                  <span className="block text-[15px] font-bold text-[#1c2338] leading-none text-left whitespace-nowrap">北京朝阳大悦城</span>
-                  <span className="block text-[12.5px] text-[#8B94A5] leading-none mt-[6px] text-left whitespace-nowrap">
+                  <span className="block text-[14.5px] font-bold text-[#1c2338] leading-none text-left whitespace-nowrap">北京朝阳大悦城</span>
+                  <span className="block text-[12px] text-[#8B94A5] leading-none mt-[6px] text-left whitespace-nowrap">
                     预计<span className="text-[#F9571F] font-semibold">15:16</span>到达
                   </span>
                 </span>
-                <ChevronRight size={15} color="#8B94A5" />
+                <ChevronRight size={14} color="#8B94A5" />
               </button>
-              <div className="absolute left-[252px] top-[162px]">
+              {/* 图钉宽 30、尖端在顶部下方 36 处 → 尖端落在路线终点 (267,196) */}
+              <div className="absolute left-[252px] top-[160px]">
                 <PinTeardrop size={30} color={multi ? '#E8342A' : '#FA5A00'} />
               </div>
 
               {/* route bubble */}
               <div
-                className="absolute left-[167px] top-[200px] rounded-full px-[13px] py-[7px] text-white text-[13px] font-semibold leading-none whitespace-nowrap"
+                className="absolute left-[174px] top-[207px] rounded-full px-[12px] py-[7px] text-white text-[12.5px] font-semibold leading-none whitespace-nowrap"
                 style={{ background: '#FA6805' }}
               >
                 {multi ? '路线2.3公里 约6分钟' : '全程2.3公里 约6分钟'}
               </div>
 
               {/* pickup card + markers */}
+              {/* 卡片右边缘 (≈157) 在路线竖段 (x=163) 左侧，不压线；底边在图钉顶上方 */}
               <button
-                className="absolute left-[16px] top-[197px] bg-white rounded-[13px] pl-[15px] pr-[12px] py-[11px] flex items-center gap-[8px] press shadow-[0_4px_16px_rgba(30,40,60,0.12)]"
+                className="absolute left-[8px] top-[170px] bg-white rounded-[12px] pl-[13px] pr-[9px] py-[10px] flex items-center gap-[6px] press shadow-[0_4px_16px_rgba(30,40,60,0.12)]"
                 onClick={() => nav('/pickup')}
               >
                 <span>
-                  <span className="block text-[15px] font-bold text-[#1c2338] leading-none text-left whitespace-nowrap">我的位置</span>
-                  <span className="block text-[12.5px] text-[#8B94A5] leading-none mt-[6px] text-left whitespace-nowrap">北京市朝阳区朝阳路</span>
+                  <span className="block text-[14.5px] font-bold text-[#1c2338] leading-none text-left whitespace-nowrap">我的位置</span>
+                  <span className="block text-[12px] text-[#8B94A5] leading-none mt-[6px] text-left whitespace-nowrap">北京市朝阳区朝阳路</span>
                 </span>
-                <ChevronRight size={15} color="#8B94A5" />
+                <ChevronRight size={14} color="#8B94A5" />
               </button>
-              <div className="absolute left-[86px] top-[245px]">
-                <PinTeardrop size={28} color={multi ? '#1FC46A' : '#FA5A00'} />
-              </div>
-              <div className="absolute left-[87px] top-[262px] w-[40px] h-[40px] rounded-full bg-[#BBD3F5]/35 flex items-center justify-center">
+              {/* 定位蓝点：圆心在路线起点 (104,262) */}
+              <div className="absolute left-[84px] top-[242px] w-[40px] h-[40px] rounded-full bg-[#BBD3F5]/35 flex items-center justify-center">
                 <div className="w-[16px] h-[16px] rounded-full bg-[#2F7BFF] border-[3px] border-white" />
+              </div>
+              {/* 图钉宽 26、尖端在顶部下方 31 处 → 尖端落在路线起点 (104,262) */}
+              <div className="absolute left-[91px] top-[231px]">
+                <PinTeardrop size={26} color={multi ? '#1FC46A' : '#FA5A00'} />
               </div>
             </FakeMap>
           </div>
@@ -203,7 +212,7 @@ export default function CarSelect() {
           <div className="absolute left-1/2 -translate-x-1/2 top-[42px] h-[38px] bg-white rounded-full flex items-center px-[6px] shadow-[0_2px_10px_rgba(30,40,60,0.1)]">
             <span className="px-[16px] text-[16px] font-bold text-[#F9571F] leading-none">出发</span>
             <span className="flex items-center gap-[5px] px-[12px] text-[16px] font-semibold text-[#1c2338] leading-none">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+              <svg width={rem(15)} height={rem(15)} viewBox="0 0 24 24" fill="none">
                 <path d="M12 2.5c-4 0-7.2 3.1-7.2 7 0 4.4 4.3 8.6 7.2 12 2.9-3.4 7.2-7.6 7.2-12 0-3.9-3.2-7-7.2-7Z" stroke="#1c2338" strokeWidth="2" />
                 <circle cx="12" cy="9.4" r="2.6" stroke="#1c2338" strokeWidth="2" />
               </svg>
@@ -233,7 +242,7 @@ export default function CarSelect() {
           <div className="absolute left-[12px] right-[12px] bottom-[-16px]">
             <PromoBanner />
           </div>
-        </div>
+        </MapArea>
 
         {/* ---------------- list sheet ---------------- */}
         <div
@@ -248,22 +257,21 @@ export default function CarSelect() {
               <span className="text-[16px] font-bold text-[#1c2338]">秒接单</span>
             </div>
             <div className="flex items-center gap-[8px] rounded-[11px] p-[3px]" style={{ background: '#EEF1F4' }}>
+              {/* 两个按钮都带 1.5px 边框（未选中时透明），选中 / 未选中时尺寸一致，不会一高一低 */}
               <button
-                className="rounded-[9px] px-[13px] py-[7px] text-[14px] leading-none whitespace-nowrap press"
-                style={
-                  multi
-                    ? { color: '#8B94A5' }
-                    : { background: '#fff', color: '#1c2338', fontWeight: 600, boxShadow: '0 2px 8px rgba(30,40,60,0.08)' }
-                }
+                className={`rounded-[9px] px-[13px] py-[7px] text-[14px] leading-none whitespace-nowrap border-[1.5px] border-transparent press ${
+                  multi ? '' : 'shadow-[0_2px_8px_rgba(30,40,60,0.08)]'
+                }`}
+                style={multi ? { color: '#8B94A5' } : { background: '#fff', color: '#1c2338', fontWeight: 600 }}
                 onClick={() => setMode('simple')}
               >
                 智能勾选
               </button>
               <button
-                className="rounded-[9px] px-[13px] py-[7px] text-[14px] leading-none whitespace-nowrap press"
+                className="rounded-[9px] px-[13px] py-[7px] text-[14px] leading-none whitespace-nowrap border-[1.5px] border-transparent press"
                 style={
                   multi
-                    ? { background: '#fff', color: '#F9571F', fontWeight: 600, border: '1.5px solid #F9571F' }
+                    ? { background: '#fff', color: '#F9571F', fontWeight: 600, borderColor: '#F9571F' }
                     : { color: '#8B94A5' }
                 }
                 onClick={() => setMode('multi')}
@@ -288,7 +296,7 @@ export default function CarSelect() {
                     className="w-[64px] shrink-0 flex flex-col items-center justify-center gap-[6px] press"
                     style={{
                       background: active ? (multi ? '#fff' : '#fff') : multi ? '#FBEDE4' : 'transparent',
-                      borderRadius: active ? '14px 0 0 14px' : 0,
+                      borderRadius: active ? `${rem(14)} 0 0 ${rem(14)}` : 0,
                     }}
                     onClick={() => setActiveTab(t.name)}
                   >
@@ -333,7 +341,7 @@ export default function CarSelect() {
           {/* notice (multi only) */}
           {multi && (
             <div className="mt-[10px] py-[9px] flex items-center justify-center gap-[8px]" style={{ background: '#FDEEE3' }}>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <svg width={rem(20)} height={rem(20)} viewBox="0 0 24 24" fill="none">
                 <path d="M4 9.5h3.2L12 5.5v13l-4.8-4H4v-5Z" fill="#F9571F" />
                 <path d="M15.5 9a4.2 4.2 0 0 1 0 6M18 6.8a7.6 7.6 0 0 1 0 10.4" stroke="#F9571F" strokeWidth="1.9" strokeLinecap="round" />
               </svg>
@@ -344,7 +352,7 @@ export default function CarSelect() {
       </div>
 
       {/* ---------------- bottom bar ---------------- */}
-      <div className="shrink-0 bg-white rounded-t-[20px] px-[18px] pt-[13px] pb-[26px] flex items-center justify-between shadow-[0_-6px_24px_rgba(30,40,60,0.06)]">
+      <div className="shrink-0 bg-white rounded-t-[20px] px-[18px] pt-[13px] pb-[calc(13px+var(--sab))] flex items-center justify-between shadow-[0_-6px_24px_rgba(30,40,60,0.06)]">
         <div>
           <div className="flex items-baseline gap-[3px] whitespace-nowrap">
             <span className="text-[15px] font-bold text-[#1c2338]">预计</span>
@@ -358,8 +366,8 @@ export default function CarSelect() {
           </div>
         </div>
         <button
-          className="rounded-[13px] px-[22px] py-[15px] text-white text-[17px] font-bold leading-none whitespace-nowrap press shrink-0"
-          style={{ background: 'linear-gradient(135deg,#FF7A18,#FC5201)', boxShadow: '0 10px 22px rgba(252,82,1,0.32)' }}
+          className="rounded-[13px] px-[22px] py-[15px] text-white text-[17px] font-bold leading-none whitespace-nowrap press shrink-0 shadow-[0_10px_22px_rgba(252,82,1,0.32)]"
+          style={{ background: 'linear-gradient(135deg,#FF7A18,#FC5201)' }}
           onClick={() => nav('/calling')}
         >
           {multi ? '呼叫多种车型' : '呼叫福利打车'}
@@ -425,7 +433,8 @@ function Price({ prefix, int, dec, discount, discountOrange }) {
 function SimpleRow({ r, checked, onToggle }) {
   return (
     <div className="bg-white rounded-[13px] pl-[6px] pr-[8px] py-[8px] flex items-center gap-[5px] shadow-[0_3px_14px_rgba(30,40,60,0.05)]">
-      <img src={r.img} alt="" className="w-[62px] h-[42px] object-contain shrink-0" />
+      {/* 缩略图是 186×101 的 WebP（每张约 2KB）；写明宽高，图片没到之前也先占好位置 */}
+      <img src={r.img} alt="" width="186" height="101" decoding="async" className="w-[62px] h-[42px] object-contain shrink-0" />
       <div className="flex-1 min-w-0">
         <div className="text-[13.5px] font-bold text-[#1c2338] leading-none whitespace-nowrap truncate">{r.title}</div>
         {r.tags ? (
